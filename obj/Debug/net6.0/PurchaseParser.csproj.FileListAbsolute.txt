@@ -1,0 +1,17 @@
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\PurchaseParser.exe
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\PurchaseParser.deps.json
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\PurchaseParser.runtimeconfig.json
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\PurchaseParser.dll
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\PurchaseParser.pdb
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\bin\Debug\net6.0\AngleSharp.dll
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.csproj.AssemblyReference.cache
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.GeneratedMSBuildEditorConfig.editorconfig
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.AssemblyInfoInputs.cache
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.AssemblyInfo.cs
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.csproj.CoreCompileInputs.cache
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.csproj.CopyComplete
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.dll
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\refint\PurchaseParser.dll
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.pdb
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\PurchaseParser.genruntimeconfig.cache
+E:\Стажировка С#\Практика\Парсинг\Мой парсер\ПарсерЗакупки\PurchaseParser\obj\Debug\net6.0\ref\PurchaseParser.dll
