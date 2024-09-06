@@ -1,7 +1,7 @@
 ﻿using AngleSharp.Html.Dom;
 
 
-namespace ПарсерЗакупки.Core.Interfaces
+namespace PurchaseParser.Parsers.Interfaces
 {
     interface IParser<T> where T : class
     {

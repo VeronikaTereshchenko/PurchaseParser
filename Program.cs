@@ -1,71 +1,54 @@
-﻿using ПарсерЗакупки.Core;
-using ПарсерЗакупки.Core.Purchases;
+﻿using PurchaseParser.Parsers;
+using PurchaseParser.Parsers.Purchases;
 using System.Text;
-using ПарсерЗакупки.Core.Interfaces;
+using PurchaseParser.Parsers.Interfaces;
 
-internal class Program
+public class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
-        var purchaseList = new List<Element[]>();
-        var cardsAmount = 0;
+        var parsedPurchaseList = new List<Cards>();
+
         //Read page numbers and purchase name from the console
         ReadInputSettings readInputSettings = new ReadInputSettings();
         readInputSettings.ReadInputQueryPerams();
 
-        ParserWorker<Element[]> parser = new ParserWorker<Element[]>(new PurchaseParser());
+        ParserWorker<Cards> parser = new ParserWorker<Cards>(new Purchase_Parser());
 
         parser.OnNewData += Parser_OnNewData;
         parser.OnCompleted += Parser_OnComplete;
 
         IParserSettings settings = new PurchaseSettings(readInputSettings.FirstPageNum, readInputSettings.LastPageNum, readInputSettings.PurchaseName);
         parser.ParserSettings = settings;
-        parser.Start();
+        await parser.Start();
 
-        void Parser_OnNewData(object arg1, Element[] arg2)
+        void Parser_OnNewData(Cards arg2)
         {
             //добавление данных с карточек на одной странице
             //add data from cards on one page
-            purchaseList.Add(arg2);
-            //counting the total number of cards found
-            cardsAmount += arg2.Length;
+            parsedPurchaseList.Add(arg2);
         }
 
-        void Parser_OnComplete(object obj)
+        void Parser_OnComplete()
         {
             //поиск по страницам завершён
             // page search complete
             Console.WriteLine("All works done!!!");
         }
 
-        Console.WriteLine($"Total number of pages found: {purchaseList.Count}\n");
-        Console.WriteLine($"Total number of cards found: {cardsAmount}\n");
-        Console.WriteLine("Page\n");
+        Console.WriteLine($"Total number of pages found: {parsedPurchaseList.Count}\n\n");
+        Console.WriteLine("PAGE\n");
 
-        foreach (Element[] page in purchaseList)
+        foreach (Cards page in parsedPurchaseList)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            foreach (Element element in page)
+            foreach (Card element in page)
             {
-                Console.WriteLine("Element");
+                Console.WriteLine("Card");
 
-                for(int i = 0; i < element.Info.Length; i++)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            Console.WriteLine($"Закон: {element.Info[i]}"); break;
-                        case 1:
-                            Console.WriteLine($"Номер закупки: {element.Info[i]}"); break;
-                        case 2:
-                            Console.WriteLine($"Объект закупки: {element.Info[i]}"); break;
-                        case 3:
-                            Console.WriteLine($"Организация: {element.Info[i]}"); break;
-                        case 4:
-                            Console.WriteLine($"Начальная цена: {element.Info[i]}"); break;
-                    }
-                }
+                foreach (var prop in typeof(Card).GetProperties())
+                    Console.WriteLine($"{prop.Name}: {prop.GetValue(element)}");
 
                 Console.WriteLine("\n");
             }

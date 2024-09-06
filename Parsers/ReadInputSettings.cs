@@ -1,5 +1,5 @@
 ﻿
-namespace ПарсерЗакупки.Core
+namespace PurchaseParser.Parsers
 {
     //считываем с консоли имя товара по которому будет производиться поиск
     //и номера страниц, по которым будет осуществлён поиск
@@ -10,6 +10,7 @@ namespace ПарсерЗакупки.Core
         public int FirstPageNum { get; private set; }
         //номер послденей страницы
         public int LastPageNum { get; private set; }
+
         public string PurchaseName { get; private set; }
 
         //хранит текущее введённое число
@@ -21,9 +22,7 @@ namespace ПарсерЗакупки.Core
             //просим ввести страницу с указанным порядком (номер первой/последней страницы)
             // ask to enter the page with the specified order (first/last page number)
             ReadNum("first");
-            FirstPageNum = InputNum;
             ReadNum("last");
-            LastPageNum = InputNum;
 
             Console.Write($"Please state the purchase name: ");
             PurchaseName = Console.ReadLine();
@@ -33,8 +32,18 @@ namespace ПарсерЗакупки.Core
         {
             Console.WriteLine($"Please state the number of {order} page");
             string input = Console.ReadLine();
+            int pageNum;
 
-            if(Int32.TryParse(input, out InputNum)) { }
+            if(Int32.TryParse(input, out pageNum)) 
+            {
+                if(order == "first")
+                {
+                    FirstPageNum = pageNum;
+                    return;
+                }
+                
+                LastPageNum = pageNum;
+            }
 
             else
             {

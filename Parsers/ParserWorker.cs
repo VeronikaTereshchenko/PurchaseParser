@@ -1,13 +1,12 @@
 ﻿using AngleSharp.Html.Parser;
-using ПарсерЗакупки.Core.Interfaces;
+using PurchaseParser.Parsers.Interfaces;
 
-namespace ПарсерЗакупки.Core
+namespace PurchaseParser.Parsers
 {
     class ParserWorker<T> where T : class
     {
         IParser<T> _parser;
         IParserSettings _parserSettings;
-        HtmlLoader _loader;
 
         #region Properties
         public IParser<T> Parser
@@ -22,13 +21,12 @@ namespace ПарсерЗакупки.Core
             set 
             { 
                 _parserSettings = value;
-                _loader = new HtmlLoader(value);
             }
         }
         #endregion
 
-        public event Action<object, T> OnNewData;
-        public event Action<object> OnCompleted;
+        public event Action<T> OnNewData;
+        public event Action OnCompleted;
 
         #region Constructors
         public ParserWorker(IParser<T> parser)
@@ -41,7 +39,7 @@ namespace ПарсерЗакупки.Core
         }
         #endregion
 
-        public async void Start()
+        public async Task Start()
         {
             await Worker();
         }
@@ -52,7 +50,7 @@ namespace ПарсерЗакупки.Core
             //walk through the page numbers
             for (int point = _parserSettings.StartPoint; point <= _parserSettings.EndPoint; point++)
             {
-                var source = await _loader.GetSourceByNumAndName(point, _parserSettings.PurchaseName);
+                var source = await HtmlLoader.GetSourceByNumAndName(point, _parserSettings);
                 var domParser = new HtmlParser();
                 var document = await domParser.ParseDocumentAsync(source);
                 //достаём инф. из каждой карточки на странице по тегам и классам
@@ -61,10 +59,10 @@ namespace ПарсерЗакупки.Core
 
                 //передаём извлечённую инф. из карточек в метод Main
                 // pass the extracted information from cards to the Main method
-                OnNewData?.Invoke(this, result);
+                OnNewData?.Invoke(result);
             }
 
-            OnCompleted?.Invoke(this);
+            OnCompleted?.Invoke();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ПарсерЗакупки.Core.Interfaces
+﻿namespace PurchaseParser.Parsers.Interfaces
 {
     interface IParserSettings
     {
