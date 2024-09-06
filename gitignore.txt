@@ -402,4 +402,4 @@ FodyWeavers.xsd
 
 obj/
 bin/
-.vs/
+.vs/PurchaseParser
