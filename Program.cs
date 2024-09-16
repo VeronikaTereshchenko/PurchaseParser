@@ -7,22 +7,17 @@ public class Program
 {
     private static async Task Main(string[] args)
     {
-        var parsedPurchaseList = new List<Cards>();
-
-        //Read page numbers and purchase name from the console
-        ReadInputSettings readInputSettings = new ReadInputSettings();
-        readInputSettings.ReadInputQueryPerams();
-
-        ParserWorker<Cards> parser = new ParserWorker<Cards>(new Purchase_Parser());
+        var parsedPurchaseList = new List<List<Card>>();
+        var parser = new ParserWorker<List<Card>>(new Purchase_Parser());
+        IParserSettings settings = new PurchaseSettings("труба", 1, 1);
+        parser.ParserSettings = settings;
 
         parser.OnNewData += Parser_OnNewData;
         parser.OnCompleted += Parser_OnComplete;
 
-        IParserSettings settings = new PurchaseSettings(readInputSettings.FirstPageNum, readInputSettings.LastPageNum, readInputSettings.PurchaseName);
-        parser.ParserSettings = settings;
         await parser.Start();
 
-        void Parser_OnNewData(Cards arg2)
+        void Parser_OnNewData(List<Card> arg2)
         {
             //добавление данных с карточек на одной странице
             //add data from cards on one page
@@ -36,24 +31,21 @@ public class Program
             Console.WriteLine("All works done!!!");
         }
 
-        Console.WriteLine($"Total number of pages found: {parsedPurchaseList.Count}\n\n");
-        Console.WriteLine("PAGE\n");
-
-        foreach (Cards page in parsedPurchaseList)
+        if(parsedPurchaseList != null)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-
-            foreach (Card element in page)
+            foreach(List<Card> list in parsedPurchaseList)
             {
-                Console.WriteLine("Card");
+                foreach (Card card in list)
+                {
+                    Console.OutputEncoding = Encoding.UTF8;
+                    Console.WriteLine("Card");
 
-                foreach (var prop in typeof(Card).GetProperties())
-                    Console.WriteLine($"{prop.Name}: {prop.GetValue(element)}");
+                    foreach (var prop in typeof(Card).GetProperties())
+                        Console.WriteLine($"{prop.Name}: {prop.GetValue(card)}");
 
-                Console.WriteLine("\n");
+                    Console.WriteLine("\n");
+                }
             }
-
-            Console.WriteLine("\n\n");
         }
     }
 }

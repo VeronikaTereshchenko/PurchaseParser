@@ -1,20 +1,20 @@
 ﻿using AngleSharp.Html.Dom;
-using PurchaseParser.Parsers.Interfaces;
 using System.Text.RegularExpressions;
+using PurchaseParser.Parsers.Interfaces;
 
 
 namespace PurchaseParser.Parsers.Purchases
 {
-    public class Purchase_Parser : IParser<Cards>
+    public class Purchase_Parser : IParser<List<Card>>
     {
-        private Card CurrentCard { get; set; }
-        private Dictionary<string, System.Reflection.PropertyInfo> ClassPropertyDictionary;
+        private Dictionary<string, System.Reflection.PropertyInfo> PropertyLookupByAttributeValueDictionary;
+        private Dictionary<string, System.Reflection.PropertyInfo>.KeyCollection DictionaryKeys;
 
         public Purchase_Parser()
         {
             var cardProp = typeof(Card).GetProperties();
 
-            ClassPropertyDictionary = new Dictionary<string, System.Reflection.PropertyInfo> ()
+            PropertyLookupByAttributeValueDictionary = new Dictionary<string, System.Reflection.PropertyInfo> ()
             { 
                 //names of classes in the page code, by which we search for the required information
                 //law
@@ -28,70 +28,49 @@ namespace PurchaseParser.Parsers.Purchases
                 //StartPrice
                 { "price-block__value", cardProp[4] }
             };
+
+            DictionaryKeys = PropertyLookupByAttributeValueDictionary.Keys;
         }
 
-        public Cards Parse(IHtmlDocument document)
+        public List<Card> Parse(IHtmlDocument document)
         {
             //ищем карточку (карточка хранит инф. об одном объекте, полученному после поиска)
             //search for a card
-            var items = document.QuerySelectorAll("div").Where(item => item.ClassName != null
+            var purchaseCardsHtml = document.QuerySelectorAll("div").Where(item => item.ClassName != null
                                                                 //из всего кода страницы выбираются только те классы, которые
                                                                 //хранят карточки объектов
                                                                 //from the whole page code only those classes are selected that
                                                                 //store cards 
                                                                 && item.ClassName == "row no-gutters registry-entry__form mr-0");
-            Cards cards = new Cards();
+            
+            var cards = new List<Card>();
 
-            foreach (var item in items)
+            foreach (var purchaseCardHtml in purchaseCardsHtml)
             {
-                CurrentCard = new Card();
+                var card = new Card();
 
-                //находим классы из HtmlClassesList в коде странице
-                //для извлечения необходимой инф. из карточки
-                //find classes from HtmlClassesList in the page code
-                //to extract the necessary information from the card
-                FindChildren(item);
+                foreach (var dicKey in DictionaryKeys)
+                {
+                    var cardInfo = purchaseCardHtml.GetElementsByClassName(dicKey);
+
+                    if (cardInfo.Length > 0)
+                    {
+                        var info = cardInfo[0].TextContent;
+                        info = Regex.Replace(info, @"[\r\n\t]", " ");
+                        info = Regex.Replace(info, @"\s+", " ");
+                        var cardProperty = PropertyLookupByAttributeValueDictionary[dicKey];
+                        cardProperty.SetValue(card, info);
+                    }
+                }
 
                 //If a card contains a filled price field, it means that it is not empty
-                if (CurrentCard.StartPrice != null)
+                if (card.StartPrice != null)
                 {
-                    cards.Add(CurrentCard);
+                    cards.Add(card);
                 }
             }
 
             return cards;
-        }
-
-        private void FindChildren(AngleSharp.Dom.IElement item)
-        {
-            //извлекаем вложенные теги
-            //extract nested tags
-            var childrenNodes = item.Children;
-            var className = item.ClassName;
-
-            //е-и нашли класс, в котором лежит нужная инф., то забираем её
-            //if we have found a class that contains the required information, then we take it
-            if (className != null && ClassPropertyDictionary.ContainsKey(className))
-            {
-                var elementText = item.TextContent;
-                elementText = elementText.Trim(new char[] { ' ', '\n' });
-                elementText = Regex.Replace(elementText, @"[\r\n\t]", " ");
-                elementText = Regex.Replace(elementText, @"\s+", " ");
-
-                var cardProperty = ClassPropertyDictionary[className];
-                cardProperty.SetValue(CurrentCard, elementText);
-            }
-            //иначе в каждой вложенной группе тегов ищем нужные нам классы
-            //т.е. доходим до самого конца вложений
-            //otherwise, in each nested group of tags we look for the classes we need
-            //that is, we go to the very end of the attachments
-            else
-            {
-                foreach (var child in childrenNodes)
-                {
-                    FindChildren(child);
-                }
-            }
         }
     }
 }

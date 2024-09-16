@@ -4,7 +4,7 @@
     {
         string BaseUrl { get; set; }
         string PurchaseName { get; set; }
-        int StartPoint { get; set; }
-        int EndPoint { get; set; }
+        int FirstPageNum { get; set; }
+        int LastPageNum { get; set; }
     }
 }
